@@ -127,6 +127,14 @@ app.add_middleware(
 )
 
 # ───────────────────────────────────────────────────────────────────
+# x402 MICROPAYMENT INTEGRATION (optional — enable via env vars)
+# ───────────────────────────────────────────────────────────────────
+import sys
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from x402_integration import add_x402_middleware, get_x402_info, is_x402_authenticated
+X402_ENABLED = add_x402_middleware(app)
+
+# ───────────────────────────────────────────────────────────────────
 # AUTHENTICATION & RATE LIMITING
 # ───────────────────────────────────────────────────────────────────
 
@@ -260,13 +268,21 @@ def get_trading_implications(regime: str, signal_strength: float) -> List[str]:
 @app.get("/")
 def root():
     """API root - health check."""
-    return {
+    info = {
         "name": "Regime Classifier API",
         "version": API_VERSION,
         "status": "operational",
         "docs": "/docs",
         "signup": "https://api.sentinel-algo.com/signup",
     }
+    if X402_ENABLED:
+        info["x402"] = "Micropayments enabled — pay per query with USDC, no API key needed. See /x402/info"
+    return info
+
+@app.get("/x402/info")
+def x402_info():
+    """x402 micropayment info — pricing, supported networks, how to pay."""
+    return get_x402_info()
 
 @app.get("/health")
 def health():
