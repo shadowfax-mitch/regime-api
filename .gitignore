@@ -41,9 +41,10 @@ env/
 .DS_Store
 Thumbs.db
 
-# Data files (don't commit regime data - too large)
-data/regime_data.csv
+# Data files
+# NOTE: data/regime_data.csv is tracked for Render deployment
 *.csv
+!data/regime_data.csv
 
 # Logs
 *.log
