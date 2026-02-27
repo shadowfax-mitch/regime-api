@@ -1,0 +1,17 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render Deployment
+        if: github.event_name == 'push'
+        run: |
+          echo "Note: This workflow would trigger Render deployment if webhook is configured"
+          echo "To enable: Go to Render dashboard → regime-api → Settings → Deploy hooks"
+          echo "Then configure GitHub to POST to the deploy hook URL on push to main"
